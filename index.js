@@ -33,19 +33,7 @@ async function run () {
             const result =await cursor.toArray();
             res.send(result);
         });
-        app.get("/wordInfoSkipHome", async (req,res) => {
-            const query = {page:"home"}
-            const cursor = wordsCollention.find(query).skip(60).sort( {_id: -1});
-            const result =await cursor.toArray();
-            res.send(result);
-        });
-        app.get("/wordInfoJungUrl", async (req,res) => {
-            const query = {page:"jungurl"}
-            const cursor = wordsCollention.find(query).sort( {_id: -1});
-            const result =await cursor.toArray();
-            res.send(result);
-        });
-        app.get("/wordungUrl", async (req,res) => {
+        app.get("/wordJungUrl", async (req,res) => {
             const cursor = wordsCollention.find({}).sort( {_id: -1});
             const result =await cursor.toArray();
             res.send(result);
