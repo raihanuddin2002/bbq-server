@@ -22,11 +22,16 @@ async function run () {
         const wordsCollention = database.collection("wordCollection");
         
         // GET API
+        // app.get("/wordInfo", async (req,res) => {
+        //     const cursor = wordsCollention.find({}).sort( {_id: -1});
+        //     const result =await cursor.toArray();
+        //     res.send(result);
+        // });
         app.get("/wordInfo", async (req,res) => {
             const cursor = wordsCollention.find({}).sort( {_id: -1});
             const result =await cursor.toArray();
             res.send(result);
-        })
+        });
         app.get("/wordInfoLimit", async (req,res) => {
             const query = {page:"home"};
             const cursor = wordsCollention.find(query).limit(60).sort( {_id: -1});
