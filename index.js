@@ -45,6 +45,11 @@ async function run () {
             const result =await cursor.toArray();
             res.send(result);
         });
+        app.get("/wordungUrl", async (req,res) => {
+            const cursor = wordsCollention.find({}).sort( {_id: -1});
+            const result =await cursor.toArray();
+            res.send(result);
+        });
 
         // POST API
         app.post("/addword", async (req,res) => {
