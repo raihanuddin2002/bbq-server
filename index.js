@@ -23,7 +23,7 @@ async function run () {
         
         // GET API
         app.get("/wordInfo", async (req,res) => {
-            const cursor = wordsCollention.find({}).sort( {_id: -1});
+            const cursor = wordsCollention.find({}).sort({_id: -1});
             const result =await cursor.toArray();
             res.send(result);
         })
