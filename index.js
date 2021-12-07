@@ -18,26 +18,30 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run () {
     try{
         await client.connect(); 
-        const database = client.db("traveller");
-        const servicesCollention = database.collection("services");
+        const database = client.db("bbq");
+        const wordsCollention = database.collection("wordCollection");
         
-        // GET API
-        app.get("/services", async (req,res) => {
-            const cursor = servicesCollention.find({});
-            const services =await cursor.toArray();
-            res.send(services);
-        })
-        app.get("/services/:id", async (req,res) => {
-            const id = req.params.id;
-            const query = {_id: ObjectId(id)}
-            const service = await servicesCollention.findOne(query);
-            res.send(service);
+        // // GET API
+        // app.get("/service", async (req,res) => {
+        //     const cursor = servicesCollention.find({});
+        //     const services =await cursor.toArray();
+        //     res.send(services);
+        // })
+        // app.get("/services/:id", async (req,res) => {
+        //     const id = req.params.id;
+        //     const query = {_id: ObjectId(id)}
+        //     const service = await servicesCollention.findOne(query);
+        //     res.send(service);
+        // });
+
+        // POST API
+        app.post("/addWordInfo", async (req,res) => {
+            console.log("hiting")
+            const wordInfo = req.body.wordInfo;
+            // const result = await haiku.insertOne(wordInfo);
+            res.send("Send");
         });
-        app.post("/services", async (req,res) => {
-            const serviceInfo = req.body.serviceInfo;
-            const service = await servicesCollention.insertOne(serviceInfo);
-            res.send(service);
-        });
+        
     }finally{
 
     }
