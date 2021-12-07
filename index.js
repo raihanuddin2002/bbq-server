@@ -32,13 +32,19 @@ async function run () {
             const cursor = wordsCollention.find(query).limit(60).sort( {_id: -1});
             const result =await cursor.toArray();
             res.send(result);
-        })
-        // app.get("/services/:id", async (req,res) => {
-        //     const id = req.params.id;
-        //     const query = {_id: ObjectId(id)}
-        //     const service = await servicesCollention.findOne(query);
-        //     res.send(service);
-        // });
+        });
+        app.get("/wordInfoSkipHome", async (req,res) => {
+            const query = {page:"home"}
+            const cursor = wordsCollention.find(query).skip(60).sort( {_id: -1});
+            const result =await cursor.toArray();
+            res.send(result);
+        });
+        app.get("/wordInfoJungUrl", async (req,res) => {
+            const query = {page:"jungurl"}
+            const cursor = wordsCollention.find(query).sort( {_id: -1});
+            const result =await cursor.toArray();
+            res.send(result);
+        });
 
         // POST API
         app.post("/addword", async (req,res) => {
