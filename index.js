@@ -23,6 +23,7 @@ async function run () {
         
         // GET API
         app.get("/wordInfo", async (req,res) => {
+            console.log("hitting the get")
             const cursor = wordsCollention.find({});
             const result =await cursor.toArray();
             res.send(result);
