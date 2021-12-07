@@ -21,12 +21,12 @@ async function run () {
         const database = client.db("bbq");
         const wordsCollention = database.collection("wordCollection");
         
-        // // GET API
-        // app.get("/service", async (req,res) => {
-        //     const cursor = servicesCollention.find({});
-        //     const services =await cursor.toArray();
-        //     res.send(services);
-        // })
+        // GET API
+        app.get("/wordInfo", async (req,res) => {
+            const cursor = wordsCollention.find({});
+            const result =await cursor.toArray();
+            res.send(result);
+        })
         // app.get("/services/:id", async (req,res) => {
         //     const id = req.params.id;
         //     const query = {_id: ObjectId(id)}
@@ -35,7 +35,7 @@ async function run () {
         // });
 
         // POST API
-        app.post("/word", async (req,res) => {
+        app.post("/addword", async (req,res) => {
             const wordInfo = req.body;
             const result = await wordsCollention.insertOne(wordInfo);
             res.send(result);
