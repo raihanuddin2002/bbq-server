@@ -22,11 +22,6 @@ async function run () {
         const wordsCollention = database.collection("wordCollection");
         
         // GET API
-        // app.get("/wordInfo", async (req,res) => {
-        //     const cursor = wordsCollention.find({}).sort( {_id: -1});
-        //     const result =await cursor.toArray();
-        //     res.send(result);
-        // });
         app.get("/wordInfo", async (req,res) => {
             const cursor = wordsCollention.find({}).sort( {_id: -1});
             const result =await cursor.toArray();
@@ -48,6 +43,14 @@ async function run () {
         app.post("/addword", async (req,res) => {
             const wordInfo = req.body;
             const result = await wordsCollention.insertOne(wordInfo);
+            res.send(result);
+        });
+
+        app.post("/wordJungUrlSearch", async (req,res) => {
+            const searchText = req.body.searchText;
+            const query = {wordLine1:searchText};
+            const cursor = wordsCollention.find(query).sort( {_id: -1});
+            const result =await cursor.toArray();
             res.send(result);
         });
         
