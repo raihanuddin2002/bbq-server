@@ -28,7 +28,8 @@ async function run () {
             res.send(result);
         })
         app.get("/wordInfoLimit", async (req,res) => {
-            const cursor = wordsCollention.find({}).limit(60);
+            const query = {page:"home"};
+            const cursor = wordsCollention.find(query).limit(60);
             const result =await cursor.toArray();
             res.send(result);
         })
