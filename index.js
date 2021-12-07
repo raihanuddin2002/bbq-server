@@ -35,7 +35,7 @@ async function run () {
         // });
 
         // POST API
-        app.post("/addwordinfo", async (req,res) => {
+        app.post("/word", async (req,res) => {
             const wordInfo = req.body;
             const result = await wordsCollention.insertOne(wordInfo);
             res.send(result);
