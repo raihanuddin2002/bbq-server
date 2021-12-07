@@ -38,8 +38,8 @@ async function run () {
         app.post("/addWordInfo", async (req,res) => {
             console.log("hiting")
             const wordInfo = req.body.wordInfo;
-            // const result = await haiku.insertOne(wordInfo);
-            res.send("Send");
+            const result = await haiku.insertOne(wordInfo);
+            res.send(result);
         });
         
     }finally{
