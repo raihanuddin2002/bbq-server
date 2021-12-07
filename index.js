@@ -35,7 +35,7 @@ async function run () {
         // });
 
         // POST API
-        app.post("/addWordInfo", async (req,res) => {
+        app.post("/addwordinfo", async (req,res) => {
             console.log("hiting")
             const wordInfo = req.body.wordInfo;
             const result = await haiku.insertOne(wordInfo);
