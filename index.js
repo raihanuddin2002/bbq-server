@@ -68,15 +68,26 @@ async function run () {
             res.send(result);
         });
 
+        // PUT API
+        app.put("/updateWordInfo/:id", async (req,res) => {
+            const id = req.params.id;
+            const updateWordInfo = req.body; 
+            const filter = {_id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: updateWordInfo
+              };
+            const result = await wordsCollention.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
         // DELETE API
         app.delete("/wordDelete/:id",async (req,res) => {
-            console.log("hiting");
             const id = req.params.id;
             console.log(id)
             const query = {_id:ObjectId(id)};
             const result = await wordsCollention.deleteOne(query);
             res.send(result);
-        })
+        });
         
     }finally{
 
