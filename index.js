@@ -47,9 +47,15 @@ async function run () {
         });
 
         app.post("/wordJungUrlSearch", async (req,res) => {
-            // console.log("Hitting")
             const searchText = req.body.searchText;
             const query = {wordLine1:searchText};
+            const cursor = wordsCollention.find(query).sort( {_id: -1});
+            const result =await cursor.toArray();
+            res.send(result);
+        });
+        app.post("/userJungUrlSearch", async (req,res) => {
+            const searchUser = req.body.searchUser;
+            const query = {username:searchUser};
             const cursor = wordsCollention.find(query).sort( {_id: -1});
             const result =await cursor.toArray();
             res.send(result);
