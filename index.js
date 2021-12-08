@@ -48,14 +48,14 @@ async function run () {
 
         app.post("/wordJungUrlSearch", async (req,res) => {
             const searchText = req.body.searchText;
-            const query = {wordLine1:searchText};
+            const query = {wordLine1: { $regex: searchText, $options: 'si'}}; //{wordLine1: { $regex: searchText, $options: 'si'}}
             const cursor = wordsCollention.find(query).sort( {_id: -1});
             const result =await cursor.toArray();
             res.send(result);
         });
         app.post("/userJungUrlSearch", async (req,res) => {
             const searchUser = req.body.searchUser;
-            const query = {username:searchUser};
+            const query = {username:{ $regex: searchUser, $options: 'si'}};
             const cursor = wordsCollention.find(query).sort( {_id: -1});
             const result =await cursor.toArray();
             res.send(result);
@@ -63,9 +63,11 @@ async function run () {
 
         // DELETE API
         app.delete("/wordDelete/:id",async (req,res) => {
-            const searchUser = req.params.id;
+            console.log("hiting");
+            const id = req.params.id;
+            console.log(id)
             const query = {_id:ObjectId(id)};
-            const cursor = wordsCollention.deleteOne(query);
+            const result = await wordsCollention.deleteOne(query);
             res.send(result);
         })
         
