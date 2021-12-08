@@ -60,6 +60,13 @@ async function run () {
             const result =await cursor.toArray();
             res.send(result);
         });
+        app.post("/word2JungUrlSearch", async (req,res) => {
+            const searchText = req.body.searchText;
+            const query = {wordLine1: { $regex: searchText, $options: 'si'}}; //{wordLine1: { $regex: searchText, $options: 'si'}}
+            const cursor = wordsCollention.find(query).sort( {_id: -1});
+            const result =await cursor.toArray();
+            res.send(result);
+        });
         app.post("/userJungUrlSearch", async (req,res) => {
             const searchUser = req.body.searchUser;
             const query = {username:{ $regex: searchUser, $options: 'si'}};
