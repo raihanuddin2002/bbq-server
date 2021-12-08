@@ -27,6 +27,14 @@ async function run () {
             const result =await cursor.toArray();
             res.send(result);
         });
+        app.get("/wordInfo/:id", async (req,res) => {
+            console.log("hitting")
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)}
+            const cursor = wordsCollention.find(query);
+            const result =await cursor.toArray();
+            res.send(result);
+        });
         app.get("/wordInfoLimit", async (req,res) => {
             const query = {page:"home"};
             const cursor = wordsCollention.find(query).limit(60).sort( {_id: -1});
