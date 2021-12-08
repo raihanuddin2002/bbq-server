@@ -31,8 +31,7 @@ async function run () {
             console.log("hitting")
             const id = req.params.id;
             const query = {_id: ObjectId(id)}
-            const cursor = wordsCollention.find(query);
-            const result =await cursor.toArray();
+            const result =await wordsCollention.find(query);
             res.send(result);
         });
         app.get("/wordInfoLimit", async (req,res) => {
