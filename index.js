@@ -60,6 +60,14 @@ async function run () {
             const result =await cursor.toArray();
             res.send(result);
         });
+
+        // DELETE API
+        app.delete("/wordDelete/:id",async (req,res) => {
+            const searchUser = req.params.id;
+            const query = {_id:ObjectId(id)};
+            const cursor = wordsCollention.deleteOne(query);
+            res.send(result);
+        })
         
     }finally{
 
