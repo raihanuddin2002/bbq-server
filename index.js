@@ -62,7 +62,7 @@ async function run () {
         });
         app.post("/word2JungUrlSearch", async (req,res) => {
             const searchText = req.body.searchText2;
-            const query = {wordLine1: { $regex: searchText, $options: 'si'}}; //{wordLine1: { $regex: searchText, $options: 'si'}}
+            const query = {wordLine2: { $regex: searchText, $options: 'si'}}; //{wordLine1: { $regex: searchText, $options: 'si'}}
             const cursor = wordsCollention.find(query).sort( {_id: -1});
             const result =await cursor.toArray();
             res.send(result);
