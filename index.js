@@ -4,6 +4,7 @@ const {MongoClient} = require("mongodb");
 const env = require('dotenv').config();
 const cors = require("cors");
 const ObjectId = require("mongodb").ObjectId;
+const bcrypt = require("bcryptjs");
 
 const port = process.env.PORT || 5000;
 
@@ -17,6 +18,9 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run () {
     try{
+        /*==================================
+          *       Words Collection start 
+          *==================================*/
         await client.connect(); 
         const database = client.db("bbq");
         const wordsCollention = database.collection("wordCollection");
@@ -28,7 +32,6 @@ async function run () {
             res.send(result);
         });
         app.get("/wordInfo/:id", async (req,res) => {
-            console.log("hitting")
             const id = req.params.id;
             const query = {_id: ObjectId(id)}
             const result =await wordsCollention.findOne(query);
@@ -94,6 +97,31 @@ async function run () {
             const query = {_id:ObjectId(id)};
             const result = await wordsCollention.deleteOne(query);
             res.send(result);
+        });
+         // Words Collection end
+
+        /*==================================
+        *       Users Collection start 
+        *==================================*/
+          const usersCollention = database.collection("users");
+
+        //   POST API
+          app.post("/addUser", async (req,res) => {
+            const userInfo = req.body.userInfo;
+            const {firstName,lastName,country,email,password} = userInfo;
+
+            const isUserExist = await usersCollention.findOne({email});
+            if(!isUserExist){
+                const hashPassword = await bcrypt.hash(password,10);
+                const saveUserInfo ={
+                    firstName,lastName,country,email,password:hashPassword
+                }
+                const result = await usersCollention.insertOne(saveUserInfo);
+                res.send(result);
+            }else{
+                res.send(new Error());
+            }
+            
         });
         
     }finally{
