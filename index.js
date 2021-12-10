@@ -123,10 +123,12 @@ async function run () {
                     }
                     
                     const result = await usersCollention.insertOne(saveUserInfo);
-                    // res.send(result);
-                    // window.location.href = "http://localhost:3000/verifyEmail";
+                    
+                    setTimeout(() => {
+                        res.redirect("https://bbqq-e532b.web.app/verifyEmail");
+                    },1000);
                     res.send("Email Verified Successfully!");
-                    res.redirect("https://bbqq-e532b.web.app/verifyEmail");
+                    
 
                 } 
             }catch(err) {
