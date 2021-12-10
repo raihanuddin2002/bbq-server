@@ -124,10 +124,8 @@ async function run () {
                     
                     const result = await usersCollention.insertOne(saveUserInfo);
                     
-                    setTimeout(() => {
-                        res.redirect("https://bbqq-e532b.web.app/verifyEmail");
-                    },1000);
-                    res.send("Email Verified Successfully!");
+                    res.redirect("https://bbqq-e532b.web.app/verifyEmail?emailstatus=verified");
+                    // res.send("Email Verified Successfully!");
                     
 
                 } 
