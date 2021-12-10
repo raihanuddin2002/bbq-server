@@ -125,6 +125,7 @@ async function run () {
                     const result = await usersCollention.insertOne(saveUserInfo);
                     // res.send(result);
                     // window.location.href = "http://localhost:3000/verifyEmail";
+                    res.redirect("https://bbqq-e532b.web.app/verifyEmail");
                     res.send("Email Verified Successfully!");
 
                 } 
