@@ -111,15 +111,15 @@ async function run () {
             const {firstName,lastName,country,email,password} = userInfo;
 
             const isUserExist = await usersCollention.findOne({email});
-            if(!isUserExist){
+            if(isUserExist){
+                res.send(new Error("User Alreadey Exist!"));
+            }else{
                 const hashPassword = await bcrypt.hash(password,10);
                 const saveUserInfo ={
                     firstName,lastName,country,email,password:hashPassword
                 }
                 const result = await usersCollention.insertOne(saveUserInfo);
                 res.send(result);
-            }else{
-                res.send(new Error());
             }
             
         });
