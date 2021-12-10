@@ -1,10 +1,11 @@
 const express = require('express');
 const app = express();
-const {MongoClient} = require("mongodb"); 
+const {MongoClient} = require("mongodb");
 const env = require('dotenv').config();
 const cors = require("cors");
 const ObjectId = require("mongodb").ObjectId;
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
 
 const port = process.env.PORT || 5000;
 
@@ -12,19 +13,19 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// DATABASE 
+// DATABASE
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.svqjf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 async function run () {
     try{
         /*==================================
-          *       Words Collection start 
+          *       Words Collection start
           *==================================*/
-        await client.connect(); 
+        await client.connect();
         const database = client.db("bbq");
         const wordsCollention = database.collection("wordCollection");
-        
+
         // GET API
         app.get("/wordInfo", async (req,res) => {
             const cursor = wordsCollention.find({}).sort( {_id: -1});
@@ -81,7 +82,7 @@ async function run () {
         // PUT API
         app.put("/updateWordInfo/:id", async (req,res) => {
             const id = req.params.id;
-            const updateWordInfo = req.body; 
+            const updateWordInfo = req.body;
             const filter = {_id: ObjectId(id) };
             const options = { upsert: true };
             const updateDoc = {
@@ -101,31 +102,85 @@ async function run () {
          // Words Collection end
 
         /*==================================
-        *       Users Collection start 
+        *       Users Collection start
         *==================================*/
-          const usersCollention = database.collection("users");
+        const usersCollention = database.collection("users");
+
+        // GET API
+        let userData;
+        app.get("/verifyEmail", async(req,res) => {
+            try{
+                let count = 1;
+                const {firstName,lastName,country,email,password,isVerified} = userData;
+                const token = await req.query.token;
+
+                if (token === email && count === 1){
+                    count = count + 1;
+
+                    const hashPassword = await bcrypt.hash(password,10);
+                    const saveUserInfo ={
+                        firstName,lastName,country,email,password:hashPassword,isVerified:true
+                    }
+                    
+                    const result = await usersCollention.insertOne(saveUserInfo);
+                    // res.send(result);
+                    // window.location.href = "http://localhost:3000/verifyEmail";
+                    res.send("Email Verified Successfully!");
+
+                } 
+            }catch(err) {
+                res.status(400).json({
+                    message: 'Invalid Token!!'
+                 });
+            }
+        });
 
         //   POST API
-          app.post("/addUser", async (req,res) => {
+        app.post("/addUser", async (req,res) => {
             const userInfo = req.body.userInfo;
-            const {firstName,lastName,country,email,password} = userInfo;
+            const {firstName,lastName,country,email,password,isVerified} = userInfo;
 
             const isUserExist = await usersCollention.findOne({email});
             if(isUserExist){
-                return res.status(400).send({
+                return res.status(400).json({
                     message: 'User Already Exist!'
                  });
             }else{
-                const hashPassword = await bcrypt.hash(password,10);
-                const saveUserInfo ={
-                    firstName,lastName,country,email,password:hashPassword
+                // Mail send
+                    const senderInfo = nodemailer.createTransport({
+                        service:"gmail",
+                        auth:{
+                            user:"jungurl2021@gmail.com",
+                            pass:"Jung1820@"
+                        },
+                        tls:{
+                            rejectUnauthorized:false
+                        }
+                    })
+                // Send Email to user
+                const mailOptions = {
+                    from:`Verify Your Email <jungurl@gmail.com>`,
+                    to:email,
+                    subject: "Verified Email check",
+                    html:`<h2>Thank you for registering our website Jungurl</h2> <h4>Please Verify Your Email...</h4> <a href="https://bbq-server.herokuapp.com/verifyEmail?token=${email}">Click Here to verify</a>`
                 }
-                const result = await usersCollention.insertOne(saveUserInfo);
-                res.send(result);
+
+                // Sending Mail
+                senderInfo.sendMail(mailOptions, function(err, info){
+                    if(err){
+                        return res.status(400).json({
+                            message: 'Try Again Something went Wrong!!'
+                         });
+                    }else{
+                        userData = {firstName,lastName,country,email,password,isVerified};
+                        res.send("Verification link sent! Check your gmail :)");
+                    }
+                })
             }
-            
+
+
         });
-        
+
     }finally{
 
     }
