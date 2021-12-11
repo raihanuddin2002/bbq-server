@@ -164,7 +164,7 @@ async function run() {
                     from: `Verify Your Email <jungurl2021@gmail.com>`,
                     to: email,
                     subject: "Verified Email check",
-                    html: `<h2>Thank you for registering our website Jungurl</h2> <h4>Please Verify Your Email...</h4> <a href="https://bbq-server.herokuapp.com/verifyEmail?token=${email}">Click Here to verify</a>`
+                    html: `<h2>Thank you for registering our website Jungurl</h2><h4>Hello ${firstName}</h4> <h4>Please Verify Your Email...</h4> <a href="https://bbq-server.herokuapp.com/verifyEmail?token=${email}">Click Here to verify</a>`
                 }
 
                 // Sending Mail
@@ -175,7 +175,7 @@ async function run() {
                         });
                     } else {
                         userData = { firstName, lastName, country, email, password, isVerified };
-                        res.send("Check your Gmail for varification...");
+                        res.send("Check your Gmail inbox or spam for varification...");
                     }
                 })
             }
