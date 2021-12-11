@@ -192,6 +192,10 @@ async function run() {
                         message: "Username or Password is Incorrect!"
                     })
                 } else {
+                    res.cookie("email", result.email, {
+                        expires: new Date(Date.now() + 25892000000),
+                        httpOnly: true
+                    });
                     res.send("Login Successfully!");
                 }
             } catch (err) {
