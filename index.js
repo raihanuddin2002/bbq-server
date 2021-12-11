@@ -124,8 +124,8 @@ async function run() {
 
                     const result = await usersCollention.insertOne(saveUserInfo);
 
-                    // res.redirect("https://bbqq-e532b.web.app/verifyEmail?emailstatus=verified");
-                    res.send("Email Verified Successfully!");
+                    res.redirect("https://bbqq-e532b.web.app/verifyEmail?emailstatus=verified");
+                    // res.send("Email Verified Successfully!");
 
 
                 }
@@ -175,7 +175,7 @@ async function run() {
                         });
                     } else {
                         userData = { firstName, lastName, country, email, password, isVerified };
-                        res.send("Verification link sent! Check your gmail :)");
+                        res.send("Check your Gmail for varification...");
                     }
                 })
             }
