@@ -187,20 +187,21 @@ async function run() {
                 const result = await usersCollention.findOne({ email: loginInfo.email });
                 const isMatch = await bcrypt.compare(loginInfo.password, result.password);
 
+                res.cookie("email", "result.email", {
+                    expires: new Date(Date.now() + 25892000000),
+                    httpOnly: true
+                });
+
                 if (!isMatch) {
                     res.status(400).json({
-                        message: "Username or Password is Incorrect!"
+                        message: "Email or Password is Incorrect!"
                     })
                 } else {
-                    res.cookie("email", result.email, {
-                        expires: new Date(Date.now() + 25892000000),
-                        httpOnly: true
-                    });
-                    res.send("Login Successfully!");
+                    res.send(result.email);
                 }
             } catch (err) {
                 res.status(400).json({
-                    message: "Username or Password is Incorrect!"
+                    message: "Email or Password is Incorrect!"
                 })
             }
         });
