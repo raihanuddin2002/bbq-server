@@ -183,7 +183,7 @@ async function run() {
             }
         });
         // Login
-        app.post("/login", async function (req, res) {
+        app.post("/loginUser", async function (req, res) {
             try {
                 const loginInfo = req.body.loginInfo;
                 const result = await usersCollention.findOne({ email: loginInfo.email });
