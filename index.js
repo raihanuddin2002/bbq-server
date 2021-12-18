@@ -202,8 +202,7 @@ async function run() {
 
                     res.send(token);
 
-                }
-                if (!isMatch) {
+                } else {
                     res.status(400).json({
                         message: "Email or Password is Incorrect!"
                     })
