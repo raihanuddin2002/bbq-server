@@ -217,13 +217,10 @@ async function run() {
 
         // Check admin
         app.post("/isAdmin", async (req, res) => {
-            const token = req.body.userToken;
-            console.log(token);
-            const result = await usersCollention.findOne({ token: token });
-            if (result) {
-                console.log(result.email);
-                res.send(true)
-            }
+            const token = req.body.getCookie;
+            const result = await usersCollention.findOne({ token });
+
+            res.send(result.role);
         });
 
     } finally {
