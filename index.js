@@ -6,6 +6,7 @@ const cors = require("cors");
 const ObjectId = require("mongodb").ObjectId;
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
+const jwt = require('jsonwebtoken');
 
 const port = process.env.PORT || 5000;
 
@@ -111,15 +112,16 @@ async function run() {
         app.get("/verifyEmail", async (req, res) => {
             try {
                 let count = 1;
-                const { firstName, lastName, country, email, password, isVerified } = userData;
+                const { firstName, lastName, country, email, password } = userData;
                 const token = await req.query.token;
+
 
                 if (token === email && count === 1) {
                     count = count + 1;
 
                     const hashPassword = await bcrypt.hash(password, 10);
                     const saveUserInfo = {
-                        firstName, lastName, country, email, password: hashPassword, isVerified: true
+                        firstName, lastName, country, email, password: hashPassword, isVerified: true, token: ""
                     }
 
                     const result = await usersCollention.insertOne(saveUserInfo);
@@ -140,7 +142,7 @@ async function run() {
         //   POST API
         app.post("/addUser", async (req, res) => {
             const userInfo = req.body.userInfo;
-            const { firstName, lastName, country, email, password, isVerified } = userInfo;
+            const { firstName, lastName, country, email, password, isVerified, token } = userInfo;
 
             const isUserExist = await usersCollention.findOne({ email });
             if (isUserExist) {
@@ -174,7 +176,7 @@ async function run() {
                             message: 'Try Again Something went Wrong!!'
                         });
                     } else {
-                        userData = { firstName, lastName, country, email, password, isVerified };
+                        userData = { firstName, lastName, country, email, password, isVerified, token };
                         res.send("Check your Gmail inbox or spam for varification...");
                     }
                 })
@@ -187,22 +189,40 @@ async function run() {
                 const result = await usersCollention.findOne({ email: loginInfo.email });
                 const isMatch = await bcrypt.compare(loginInfo.password, result.password);
 
-                res.cookie("email", "result.email", {
-                    expires: new Date(Date.now() + 25892000000),
-                    httpOnly: true
-                });
+                if (isMatch) {
+                    let token = await jwt.sign({ _id: result._id }, process.env.JWT_SECRET_KEY);
 
+                    const filter = { email: loginInfo.email };
+                    const options = { upsert: true };
+                    const updateDoc = {
+                        $set: { token },
+                    };
+
+                    const updateToken = await usersCollention.updateOne(filter, updateDoc, options);
+
+                    res.send(token);
+
+                }
                 if (!isMatch) {
                     res.status(400).json({
                         message: "Email or Password is Incorrect!"
                     })
-                } else {
-                    res.send(result.email);
                 }
             } catch (err) {
                 res.status(400).json({
                     message: "Email or Password is Incorrect!"
                 })
+            }
+        });
+
+        // Check admin
+        app.post("/isAdmin", async (req, res) => {
+            const token = req.body.userToken;
+            console.log(token);
+            const result = await usersCollention.findOne({ token: token });
+            if (result) {
+                console.log(result.email);
+                res.send(true)
             }
         });
 
