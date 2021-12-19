@@ -183,8 +183,9 @@ async function run() {
             }
         });
         // Login
-        app.post("/loginUser", async function (req, res) {
+        app.post("/loginuser", async function (req, res) {
             try {
+                console.log("hit")
                 const loginInfo = req.body.loginInfo;
                 const result = await usersCollention.findOne({ email: loginInfo.email });
                 const isMatch = await bcrypt.compare(loginInfo.password, result.password);
