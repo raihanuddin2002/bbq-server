@@ -183,7 +183,7 @@ async function run() {
             }
         });
         // Login
-        app.post("/signin", async function (req, res) {
+        app.post("/signin", async (req, res) => {
             try {
                 console.log("hit")
                 const loginInfo = req.body.loginInfo;
