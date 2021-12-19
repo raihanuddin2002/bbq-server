@@ -183,33 +183,26 @@ async function run() {
             }
         });
         app.post("/userLogin", async (req, res) => {
-            try {
-                console.log("hit")
-                const loginInfo = req.body.loginInfo;
-                const result = await usersCollention.findOne({ email: loginInfo.email });
-                const isMatch = await bcrypt.compare(loginInfo.password, result.password);
+            const loginInfo = req.body.loginInfo;
+            const result = await usersCollention.findOne({ email: loginInfo.email });
+            const isMatch = await bcrypt.compare(loginInfo.password, result.password);
 
-                if (!isMatch) {
-                    res.status(400).json({
-                        message: "Email or Password is Incorrect!"
-                    })
-                } else {
-                    let token = await jwt.sign({ _id: result._id }, process.env.JWT_SECRET_KEY);
-
-                    const filter = { email: loginInfo.email };
-                    const options = { upsert: true };
-                    const updateDoc = {
-                        $set: { token }
-                    };
-
-                    const updateToken = await usersCollention.updateOne(filter, updateDoc, options);
-
-                    res.send(token);
-                }
-            } catch (err) {
+            if (!isMatch) {
                 res.status(400).json({
-                    message: "Invalid Credintials!"
+                    message: "Email or Password is Incorrect!"
                 })
+            } else {
+                let token = await jwt.sign({ _id: result._id }, process.env.JWT_SECRET_KEY);
+
+                const filter = { email: loginInfo.email };
+                const options = { upsert: true };
+                const updateDoc = {
+                    $set: { token }
+                };
+
+                const updateToken = await usersCollention.updateOne(filter, updateDoc, options);
+
+                res.send(token);
             }
         });
 
