@@ -189,7 +189,11 @@ async function run() {
                 const result = await usersCollention.findOne({ email: loginInfo.email });
                 const isMatch = await bcrypt.compare(loginInfo.password, result.password);
 
-                if (isMatch) {
+                if (!isMatch) {
+                    res.status(400).json({
+                        message: "Email or Password is Incorrect!"
+                    })
+                } else {
                     let token = await jwt.sign({ _id: result._id }, process.env.JWT_SECRET_KEY);
 
                     const filter = { email: loginInfo.email };
@@ -201,15 +205,10 @@ async function run() {
                     const updateToken = await usersCollention.updateOne(filter, updateDoc, options);
 
                     res.send(token);
-
-                } else {
-                    res.status(400).json({
-                        message: "Email or Password is Incorrect!"
-                    })
                 }
             } catch (err) {
                 res.status(400).json({
-                    message: "Email or Password is Incorrect!"
+                    message: "Email or Password is Incorrect!!"
                 })
             }
         });
