@@ -208,7 +208,7 @@ async function run() {
                 }
             } catch (err) {
                 res.status(400).json({
-                    message: "Email or Password is Incorrect!!"
+                    message: "Invalid Credintials!"
                 })
             }
         });
