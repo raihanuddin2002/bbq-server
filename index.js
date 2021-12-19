@@ -182,7 +182,7 @@ async function run() {
                 })
             }
         });
-        app.post("/signin", async (req, res) => {
+        app.post("/userLogin", async (req, res) => {
             try {
                 console.log("hit")
                 const loginInfo = req.body.loginInfo;
@@ -199,7 +199,7 @@ async function run() {
                     const filter = { email: loginInfo.email };
                     const options = { upsert: true };
                     const updateDoc = {
-                        $set: { token },
+                        $set: { token }
                     };
 
                     const updateToken = await usersCollention.updateOne(filter, updateDoc, options);
